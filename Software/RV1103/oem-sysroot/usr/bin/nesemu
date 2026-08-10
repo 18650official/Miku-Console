@@ -1,0 +1,103 @@
+#!/bin/sh
+
+# =========================================================
+# Configuration Area
+# =========================================================
+
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
+export LD_LIBRARY_PATH=/oem/usr/lib:$LD_LIBRARY_PATH
+
+ROM_PATH="$1"
+
+# Key mapping paths
+MAPPING_DIR="/oem/key_mappings"
+CONF_TARGET="/oem/usr/etc/virtual_keypad.conf"
+
+# Disable Core Dump
+echo "/dev/null" > /proc/sys/kernel/core_pattern 2>/dev/null || ulimit -c 0
+
+if [ -z "$ROM_PATH" ]; then
+    echo "Usage: $0 /path/to/rom.nes"
+    exit 1
+fi
+
+# =========================================================
+# Hot-Swap Keymap Function
+# =========================================================
+load_keymap() {
+    MAP_NAME="$1"
+    SOURCE_FILE="$MAPPING_DIR/$MAP_NAME"
+
+    echo ">>> Loading keymap: $MAP_NAME ..."
+
+    if [ -f "$SOURCE_FILE" ]; then
+        # CRITICAL: Use 'cat' redirect to preserve inode for inotify
+        cat "$SOURCE_FILE" > "$CONF_TARGET"
+        sleep 0.1
+    else
+        echo "[ERROR] Keymap not found: $SOURCE_FILE"
+    fi
+}
+
+# =========================================================
+# Cleanup & Failsafe Exit
+# =========================================================
+cleanup() {
+    echo "\n>>> Signal received or process ended. Cleaning up..."
+
+    # 1. Safely terminate the emulator process
+    if [ -n "$EMU_PID" ]; then
+        kill -INT $EMU_PID 2>/dev/null
+        
+        # Poll the process state for up to 1.5 seconds
+        TIMEOUT=15
+        while [ $TIMEOUT -gt 0 ]; do
+            if kill -0 $EMU_PID 2>/dev/null; then
+                sleep 0.1
+                TIMEOUT=$((TIMEOUT-1))
+            else
+                break
+            fi
+        done
+
+        # If it still exists, force kill it
+        if kill -0 $EMU_PID 2>/dev/null; then
+            echo ">>> Process hung. Sending SIGKILL (-9)..."
+            kill -9 $EMU_PID 2>/dev/null
+        fi
+    fi
+
+    # 2. Restore default keypad layout for LVGL
+    load_keymap "default.conf"
+
+    # 3. Clear the Framebuffer
+    echo ">>> Clearing framebuffer..."
+    dd if=/dev/zero of=/dev/fb0 count=320 bs=512 >/dev/null 2>&1
+
+    # 4. Restore Virtual Terminal
+    chvt 2
+    chvt 1
+    stty sane
+
+    echo ">>> Cleanup complete. Returning to UI."
+    exit 0
+}
+
+trap cleanup INT TERM HUP QUIT
+
+# =========================================================
+# Main Execution
+# =========================================================
+
+# Load NES specific mapping
+load_keymap "nes.conf"
+
+echo ">>> Starting NES Emulator..."
+/oem/usr/bin/.nesemu "$ROM_PATH" &
+EMU_PID=$!
+
+wait $EMU_PID
+
+EMU_PID=""
+cleanup
+

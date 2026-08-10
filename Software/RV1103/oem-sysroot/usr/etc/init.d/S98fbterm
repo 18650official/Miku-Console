@@ -1,0 +1,81 @@
+#!/bin/sh
+#
+# S99fbterm: Manages the Framebuffer Terminal (FbTerm).
+# This script does NOT start fbterm by default on boot.
+# It provides specific actions to be called by other applications.
+#
+
+NAME="FbTerm"
+DAEMON="/usr/bin/fbterm"
+PIDOF_NAME="fbterm"
+FONTCONFIG_FILE="/oem/etc/fonts/fonts.conf"
+
+log() {
+    echo "S99fbterm: $1"
+}
+
+# Function to start the service WITH input (for games)
+do_start_with_input() {
+    # Make symlink
+    rm /.fbtermrc
+    rm /root/.fbtermrc
+    ln -s /oem/.fbtermrc /.fbtermrc
+    ln -s /oem/.fbtermrc /root/.fbtermrc
+
+    # 【新增】检查是否已经在运行
+    if pidof $PIDOF_NAME > /dev/null 2>&1; then
+        log "FbTerm is already running. Ignoring start request."
+        return 0
+    fi
+
+    log "Starting FbTerm with standard input..."
+
+    if [ -e /sys/class/vtconsole/vtcon1/bind ]; then
+        echo 0 > /sys/class/vtconsole/vtcon1/bind 2>/dev/null
+    fi
+
+    # Launch with I/O redirected to the physical console
+    setsid sh -c "exec $DAEMON </dev/tty1 >/dev/tty1 2>&1" &
+
+    log "Started with input."
+}
+
+# Function to stop the service
+do_stop() {
+    log "Stopping..."
+
+    if pidof $PIDOF_NAME > /dev/null 2>&1; then
+        killall $PIDOF_NAME > /dev/null 2>&1
+        sleep 1 # Wait for the process to exit
+    fi
+
+    # Return the framebuffer to the kernel console
+    if [ -e /sys/class/vtconsole/vtcon1/bind ]; then
+        echo 1 > /sys/class/vtconsole/vtcon1/bind 2>/dev/null
+    fi
+
+    log "Stopped."
+}
+
+case "$1" in
+#  start)
+#    do_start_with_input
+#    ;;
+  start_with_input)
+    do_start_with_input
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart)
+    do_stop
+    sleep 1 # 确保资源释放
+    do_start_with_input
+    ;;
+  *)
+    echo "Usage: $0 {start_with_input|stop|restart}"
+    exit 1
+esac
+
+exit 0
+

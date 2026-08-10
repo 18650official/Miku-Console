@@ -1,0 +1,113 @@
+#!/bin/sh
+# /oem/usr/bin/otg_watcher.sh
+# Monitors hardware OTG pin, applies software debounce filtering,
+# checks USB occupancy before switching, and updates mode automatically.
+
+# Check if USB Peripheral mode is currently active and communicating with a host
+is_peripheral_busy() {
+    for state_file in /sys/class/udc/*/state; do
+        if [ -f "$state_file" ]; then
+            STATE=$(cat "$state_file" 2>/dev/null)
+            if [ "$STATE" = "configured" ]; then
+                return 0
+            fi
+        fi
+    done
+
+    if [ -d "/sys/class/android_usb/android0" ]; then
+        STATE=$(cat /sys/class/android_usb/android0/state 2>/dev/null)
+        if [ "$STATE" = "CONFIGURED" ]; then
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+# Check if USB Host mode currently has attached devices
+is_host_busy() {
+    for dev in /sys/bus/usb/devices/*; do
+        DEV_NAME=$(basename "$dev")
+        case "$DEV_NAME" in
+            [0-9]-[0-9]*)
+                return 0
+                ;;
+        esac
+    done
+
+    return 1
+}
+
+# Phase 1: Initial boot setup (instant apply without debounce/occupancy check)
+INIT_HW_STATE=$(get_otg_pin)
+
+if [ -n "$INIT_HW_STATE" ]; then
+    if [ "$INIT_HW_STATE" = "1" ]; then
+        otgmode -s 1
+    elif [ "$INIT_HW_STATE" = "0" ]; then
+        otgmode -s 0
+    fi
+    LAST_STATE="$INIT_HW_STATE"
+else
+    LAST_STATE=$(otgmode -q)
+fi
+
+CANDIDATE_STATE=""
+STABLE_COUNT=0
+
+# Phase 2: Monitoring loop (2-second debounce + occupancy guard)
+while true; do
+    sleep 1
+
+    HW_STATE=$(get_otg_pin)
+
+    if [ -z "$HW_STATE" ]; then
+        continue
+    fi
+
+    if [ "$HW_STATE" != "$LAST_STATE" ]; then
+        if [ "$HW_STATE" = "$CANDIDATE_STATE" ]; then
+            STABLE_COUNT=$((STABLE_COUNT + 1))
+        else
+            CANDIDATE_STATE="$HW_STATE"
+            STABLE_COUNT=1
+        fi
+
+        if [ "$STABLE_COUNT" -ge 2 ]; then
+            CAN_SWITCH=0
+
+            # Peripheral -> Host (0 -> 1)
+            if [ "$LAST_STATE" = "0" ] && [ "$HW_STATE" = "1" ]; then
+                if is_peripheral_busy; then
+                    echo "[otg_watcher] Switch to Host BLOCKED: USB Peripheral is currently active/busy."
+                else
+                    CAN_SWITCH=1
+                fi
+
+            # Host -> Peripheral (1 -> 0)
+            elif [ "$LAST_STATE" = "1" ] && [ "$HW_STATE" = "0" ]; then
+                if is_host_busy; then
+                    echo "[otg_watcher] Switch to Peripheral BLOCKED: USB Host has attached devices."
+                else
+                    CAN_SWITCH=1
+                fi
+            fi
+
+            if [ "$CAN_SWITCH" -eq 1 ]; then
+                if [ "$HW_STATE" = "1" ]; then
+                    otgmode -s 1
+                elif [ "$HW_STATE" = "0" ]; then
+                    otgmode -s 0
+                fi
+
+                LAST_STATE="$HW_STATE"
+                CANDIDATE_STATE=""
+                STABLE_COUNT=0
+            fi
+        fi
+    else
+        CANDIDATE_STATE=""
+        STABLE_COUNT=0
+    fi
+done
+

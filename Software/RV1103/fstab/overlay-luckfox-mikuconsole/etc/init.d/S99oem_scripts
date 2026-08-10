@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# S99oem_scripts
+# 功能：作为代理，管理 /oem/usr/etc/init.d/ 下的自定义脚本
+# 位置：/etc/init.d/S99oem_scripts
+#
+
+OEM_INIT_DIR="/oem/usr/etc/init.d"
+
+start() {
+    if [ ! -d "$OEM_INIT_DIR" ]; then
+        echo "OEM scripts dir not found: $OEM_INIT_DIR"
+        return 0
+    fi
+
+    echo "Starting OEM custom scripts..."
+    
+    # 遍历 S 开头的脚本 (Start)
+    for i in "$OEM_INIT_DIR"/S??* ; do
+        # 忽略未找到文件的情况
+        [ ! -f "$i" ] && continue
+
+        case "$i" in
+            *.sh)
+                # 针对 .sh 脚本，使用 source (.) 运行以提高速度
+                # 必须在一个子 shell 中运行，防止脚本里的 exit 导致主进程退出
+                (
+                    trap - INT QUIT TSTP
+                    set start
+                    . "$i"
+                )
+                ;;
+            *)
+                # 针对可执行文件，直接调用并传入 start 参数
+                if [ -x "$i" ]; then
+                    "$i" start
+                fi
+                ;;
+        esac
+    done
+}
+
+stop() {
+    if [ ! -d "$OEM_INIT_DIR" ]; then
+        return 0
+    fi
+
+    echo "Stopping OEM custom scripts..."
+
+    # 遍历 K 开头的脚本 (Kill/Stop)
+    # 注意：标准做法是只执行 K 开头的脚本。
+    # 如果你的 OEM 目录下只有 S 开头的脚本，你需要建立软链接：ln -s S01myapp K01myapp
+    for i in "$OEM_INIT_DIR"/K??* ; do
+        
+        [ ! -f "$i" ] && continue
+
+        case "$i" in
+            *.sh)
+                (
+                    trap - INT QUIT TSTP
+                    set stop
+                    . "$i"
+                )
+                ;;
+            *)
+                if [ -x "$i" ]; then
+                    "$i" stop
+                fi
+                ;;
+        esac
+    done
+}
+
+restart() {
+    stop
+    sleep 1  # 等待一秒，确保进程完全释放资源
+    start
+}
+
+# -----------------------------------------------------------------
+# 主入口
+# -----------------------------------------------------------------
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        restart
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?
+

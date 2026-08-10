@@ -1,0 +1,98 @@
+#!/bin/sh
+# /etc/init.d/S02overlay
+# 自动 OverlayFS 挂载脚本
+# 逻辑：按需将 /oem/usr 下的子目录合并到系统目录
+
+OEM_MOUNT_POINT="/oem"
+# 隐藏的工作目录，用于 OverlayFS 原子操作
+WORK_BASE="$OEM_MOUNT_POINT/.overlay_work"
+
+# 检查 /oem 是否挂载 (这是前置条件)
+if ! grep -qs "$OEM_MOUNT_POINT" /proc/mounts; then
+    echo "OverlayFS Error: $OEM_MOUNT_POINT not mounted!"
+    exit 1
+fi
+
+# --- 核心挂载函数 ---
+do_overlay() {
+    SYSTEM_DIR="$1"      # 系统目录 (Lower Dir)，例如 /usr/share
+    OEM_DIR="$2"         # OEM目录 (Upper Dir)，例如 /oem/usr/share
+    
+    # 1. 只有当 OEM 分区下存在该目录时才执行挂载 (Lazy Load)
+    if [ -d "$OEM_DIR" ]; then
+        # 生成唯一的工作目录名 (将路径斜杠转为下划线)
+        # 例如 /usr/share -> usr_share
+        DIR_ID=$(echo "$SYSTEM_DIR" | sed 's/^\///;s/\//_/g')
+        WORK_DIR="$WORK_BASE/$DIR_ID"
+
+        # 自动创建隐藏的工作目录
+        mkdir -p "$WORK_DIR"
+        
+        # 为了防止非正常关机导致的 stale file handle，挂载前尝试清理 workdir
+        # 注意：Upper Dir (OEM_DIR) 的数据会保留，只清理临时的 Work Dir
+        rm -rf "$WORK_DIR"/* 2>/dev/null
+
+        # 执行挂载
+        # lowerdir: 只读的系统层
+        # upperdir: 读写的 OEM 层
+        # workdir:  中间工作层
+        mount -t overlay overlay -o \
+            lowerdir="$SYSTEM_DIR",upperdir="$OEM_DIR",workdir="$WORK_DIR" \
+            "$SYSTEM_DIR"
+            
+        if [ $? -eq 0 ]; then
+            echo "OverlayFS: Mounted $OEM_DIR -> $SYSTEM_DIR"
+        else
+            echo "OverlayFS: FAILED to mount $SYSTEM_DIR"
+        fi
+    else
+        # 目录不存在时的静默跳过 (或开启调试输出)
+        # echo "OverlayFS: Skipped $SYSTEM_DIR (No source in $OEM_DIR)"
+        :
+    fi
+}
+
+start() {
+    echo "Starting OverlayFS setup..."
+    
+    # --- 1. 核心二进制与库 (Bin / Lib / Local) ---
+    do_overlay "/usr/bin"    "$OEM_MOUNT_POINT/usr/bin"
+    do_overlay "/usr/lib"    "$OEM_MOUNT_POINT/usr/lib"
+    do_overlay "/usr/local"  "$OEM_MOUNT_POINT/usr/local"
+    
+    # --- 2. 资源文件 (Share) ---
+    do_overlay "/usr/share"  "$OEM_MOUNT_POINT/usr/share"
+    
+    # --- 3. 配置文件 (Etc) ---
+    # 注意：这里按你的要求，将 /oem/usr/etc 映射到了系统的 /etc
+    do_overlay "/etc"        "$OEM_MOUNT_POINT/usr/etc"
+}
+
+stop() {
+    echo "Unmounting OverlayFS..."
+    # 卸载顺序建议与挂载相反，虽然 Overlay 间无强依赖
+    umount /etc
+    umount /usr/share
+    umount /usr/local
+    umount /usr/lib
+    umount /usr/bin
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
+

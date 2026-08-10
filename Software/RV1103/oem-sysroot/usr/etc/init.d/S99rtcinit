@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# S99rtcinit - DS1302 RTC Initialization and Synchronization Script
+#
+
+TARGET_BIN="/oem/usr/bin/hwclock_ds1302"
+SYS_LINK="/sbin/hwclock"
+
+do_start() {
+    echo ">>> Starting RTC Init..."
+
+    # 1. 检查真实可执行文件是否存在且可执行
+    if [ -x "$TARGET_BIN" ]; then
+        # 判断 /sbin/hwclock 是否指向 busybox
+        LINK_TARGET=$(readlink -f "$SYS_LINK" 2>/dev/null)
+        if echo "$LINK_TARGET" | grep -q "busybox"; then
+            echo ">>> Replacing BusyBox hwclock symlink with $TARGET_BIN..."
+            mount -o remount,rw / 2>/dev/null
+            rm -f "$SYS_LINK"
+            ln -s "$TARGET_BIN" "$SYS_LINK"
+            mount -o remount,ro / 2>/dev/null
+        fi
+    else
+        echo ">>> Warning: $TARGET_BIN not found or not executable!"
+    fi
+
+    # 优先使用替换后的 /sbin/hwclock，不存在则直接调用真实程序
+    HWCLOCK_CMD="$SYS_LINK"
+    [ ! -x "$HWCLOCK_CMD" ] && HWCLOCK_CMD="$TARGET_BIN"
+
+    if [ -x "$HWCLOCK_CMD" ]; then
+        # 2. 读取 RTC 时间并提取年份 (格式如: 2026-08-05 -> 2026)
+        RTC_OUTPUT=$("$HWCLOCK_CMD" -p 2>/dev/null)
+        YEAR=$(echo "$RTC_OUTPUT" | awk '{print $1}' | cut -d'-' -f1)
+
+        # 验证年份是否为有效数字
+        if [ -n "$YEAR" ] && [ "$YEAR" -eq "$YEAR" ] 2>/dev/null; then
+            if [ "$YEAR" -lt 2024 ]; then
+                # 年份小于 2024，判定为掉电失效
+                echo ">>> RTC time loss detected (Year: $YEAR < 2024). Resetting to 2024-01-01 08:00:00..."
+                date -s "2024-01-01 08:00:00"
+                "$HWCLOCK_CMD" -w
+            else
+                # 3. 时钟正常，同步到系统
+                echo ">>> RTC time valid (Year: $YEAR). Syncing RTC to system..."
+                "$HWCLOCK_CMD" -s
+            fi
+        else
+            echo ">>> Error: Failed to parse valid year from RTC ($RTC_OUTPUT). Attempting fallback sync..."
+            "$HWCLOCK_CMD" -s
+        fi
+    else
+        echo ">>> Error: No valid hwclock executable found."
+    fi
+}
+
+do_stop() {
+    echo ">>> Saving system time to RTC before shutdown..."
+    HWCLOCK_CMD="$SYS_LINK"
+    [ ! -x "$HWCLOCK_CMD" ] && HWCLOCK_CMD="$TARGET_BIN"
+
+    # 4. 关机时主动保存当前系统时间到 RTC
+    if [ -x "$HWCLOCK_CMD" ]; then
+        "$HWCLOCK_CMD" -w
+        echo ">>> System time saved to RTC successfully."
+    else
+        echo ">>> Error: Cannot save time, hwclock not available."
+    fi
+}
+
+case "$1" in
+    start)
+        do_start
+        ;;
+    stop)
+        do_stop
+        ;;
+    restart|reload)
+        do_stop
+        do_start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
+

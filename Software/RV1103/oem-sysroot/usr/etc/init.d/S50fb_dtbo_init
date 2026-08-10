@@ -1,0 +1,18 @@
+#!/bin/sh
+# /etc/init.d/S98fb_setup
+
+case "$1" in
+    start)
+        # 确保 ConfigFS 支持已启用（如果内核没自动挂载）
+        modprobe configfs 2>/dev/null
+        
+        # 调用工具进行初始化
+        /usr/bin/fb_dtbo_config --init
+        ;;
+    stop)
+        ;;
+    *)
+        echo "Usage: $0 {start}"
+        exit 1
+esac
+

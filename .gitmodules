@@ -1,0 +1,27 @@
+[submodule "Software/RV1103/hid"]
+	path = Software/RV1103/hid
+	url = https://github.com/18650official/rv1103_imu_joystick_submodule.git
+[submodule "Software/RV1103/hwclock_ds1302"]
+	path = Software/RV1103/hwclock_ds1302
+	url = https://github.com/18650official/hwclock_ds1302_submodule.git
+[submodule "Software/RV1103/meow_rpg"]
+	path = Software/RV1103/meow_rpg
+	url = https://github.com/18650official/meow-rpg.git
+[submodule "Software/RV1103/kernel"]
+	path = Software/RV1103/kernel
+	url = https://github.com/18650official/luckfox-pico-kernel-custom.git
+[submodule "Software/RV1103/fbterm-truecolor"]
+	path = Software/RV1103/fbterm-truecolor
+	url = https://github.com/18650official/fbterm-truecolor.git
+[submodule "Software/RV1103/music"]
+	path = Software/RV1103/music
+	url = https://github.com/18650official/mkconsole_music_cli.git
+[submodule "Software/RV1103/lvgl"]
+	path = Software/RV1103/lvgl
+	url = https://github.com/18650official/lvgl_menu_for_pkpy_luckfoxpico.git
+[submodule "Software/RV1103/virtual_keypad"]
+	path = Software/RV1103/virtual_keypad
+	url = https://github.com/18650official/i2c_keypad_controller_for_embedded_linux.git
+[submodule "Software/RV1103/nesemu"]
+	path = Software/RV1103/nesemu
+	url = https://github.com/18650official/nofrendo_nesemu_linux.git

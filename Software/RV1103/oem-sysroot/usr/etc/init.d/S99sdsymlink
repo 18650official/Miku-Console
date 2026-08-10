@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# S99sdsymlink: Create symlink to the sdcard partition
+#
+
+NAME="SDSymlink"
+SD_PATH="/mnt/sdcard"
+SYMLINK_PATH="/sdcard"
+
+log() {
+    echo "S99sdsymlink: $1"
+}
+
+do_start() {
+    log "Starting $NAME..."
+   
+    # Check the SD partition existance 
+    if [ ! -d "$SD_PATH" ]; then
+        log "Error: $SD_PATH not found, SD card not exists!"
+        return 1
+    fi
+    
+    # Create symlink
+    if [ -L "$SYMLINK_PATH" ]; then
+	log "Symlink found!"
+	current_target=$(readlink "$SYMLINK_PATH" | sed 's:/*$::')
+	if [ "$current_target" = "$SD_PATH" ]; then
+	    log "Symlink correct"
+	    exit 0
+	else
+	    rm -rf "$SYMLINK_PATH"
+	    ln -sf "$SD_PATH" "$SYMLINK_PATH"
+	    log "Recreated symlink $SYMLINK_PATH to $SD_PATH"
+	fi
+    else
+	log "Can't find the symlink"
+	ln -sf "$SD_PATH" "$SYMLINK_PATH"
+	log "Created symlink $SYMLINK_PATH to $SD_PATH"
+    fi
+}
+
+do_stop() {
+    log "Stopping $NAME..."
+    # if pidof $PIDOF_NAME > /dev/null 2>&1; then
+    #     killall $PIDOF_NAME > /dev/null 2>&1
+    # fi
+}
+
+case "$1" in
+  start)
+    do_start
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart)
+    do_stop
+    sleep 1
+    do_start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

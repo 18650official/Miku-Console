@@ -1,0 +1,102 @@
+element_declarations.o: element_declarations.c \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdbool.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/stdio.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/features.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_config.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/cdefs.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stddef.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/types.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/wordsize.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/typesizes.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_stdio.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/wchar.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/wchar.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/pthreadtypes.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/endian.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/endian.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/byteswap.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-common.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-16.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdarg.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/stdio_lim.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/stdlib.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitflags.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitstatus.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/types.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/time.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/select.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/select.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/sigset.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/time.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/sysmacros.h \
+ /home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/alloca.h \
+ ../lib/expat.h ../lib/expat_external.h
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdbool.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/stdio.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/features.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_config.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/cdefs.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stddef.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/types.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/wordsize.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/typesizes.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_stdio.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/wchar.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/wchar.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/pthreadtypes.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/endian.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/endian.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/byteswap.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-common.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-16.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdarg.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/stdio_lim.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/stdlib.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitflags.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitstatus.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/types.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/time.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/select.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/select.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/sigset.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/bits/time.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/sys/sysmacros.h:
+
+/home/miku/rv_build/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/arm-rockchip830-linux-uclibcgnueabihf/sysroot/usr/include/alloca.h:
+
+../lib/expat.h:
+
+../lib/expat_external.h:

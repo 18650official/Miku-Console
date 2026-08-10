@@ -1,0 +1,56 @@
+#!/bin/bash
+# bl_sysfs.sh - 按照官方文档 (sysfs) 控制 GPIO1_C4 背光
+
+# --- 配置 ---
+GPIO_PIN=52
+GPIO_PATH="/sys/class/gpio/gpio${GPIO_PIN}"
+EXPORT_FILE="/sys/class/gpio/export"
+UNEXPORT_FILE="/sys/class/gpio/unexport"
+
+# --- 参数检查 ---
+if [ "$#" -ne 1 ]; then
+    echo "用法: $0 <0|1>"
+    echo "  0 = 关闭背光 (低电平)"
+    echo "  1 = 打开背光 (高电平)"
+    exit 1
+fi
+
+VALUE="$1"
+
+if [[ "$VALUE" != "0" && "$VALUE" != "1" ]]; then
+    echo "错误: 参数必须是 0 或 1" >&2
+    exit 1
+fi
+
+# --- 核心操作 ---
+
+# 1. 导出引脚 (如果已经存在，会忽略或报错，我们忽略错误)
+# 等效于文档中的 echo 55 > /sys/class/gpio/export [cite: 309]
+if [ ! -d "$GPIO_PATH" ]; then
+    echo "正在导出 GPIO ${GPIO_PIN}..."
+    echo "$GPIO_PIN" > "$EXPORT_FILE" 2>/dev/null
+    sleep 0.1 # 等待系统创建目录
+fi
+
+if [ ! -d "$GPIO_PATH" ]; then
+    echo "错误: 无法导出 GPIO ${GPIO_PIN}，可能已被占用或不存在。" >&2
+    exit 1
+fi
+
+# 2. 设置方向为输出 (等效于文档中的 echo out > .../direction [cite: 315])
+echo "正在设置方向为 out..."
+echo "out" > "$GPIO_PATH/direction"
+
+# 3. 设置电平值 (等效于文档中的 echo 1 > .../value [cite: 316])
+echo "正在设置值为 ${VALUE}..."
+echo "$VALUE" > "$GPIO_PATH/value"
+
+echo "设置成功。当前引脚编号: ${GPIO_PIN} (GPIO1_C4)"
+
+# 4. 保持导出状态 (不执行 unexport)，以便后续快速控制。
+# 如果需要在脚本结束时清除，请将下一段取消注释。
+# echo "正在取消导出 GPIO ${GPIO_PIN}..."
+# echo "$GPIO_PIN" > "$UNEXPORT_FILE" 2>/dev/null
+
+exit 0
+

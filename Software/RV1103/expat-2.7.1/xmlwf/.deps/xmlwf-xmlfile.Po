@@ -1,0 +1,165 @@
+xmlwf-xmlfile.o: xmlfile.c ../expat_config.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/stdio.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/features.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_config.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/cdefs.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stddef.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/types.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/wordsize.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/typesizes.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_stdio.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/wchar.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/wchar.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/pthreadtypes.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/endian.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/endian.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/byteswap.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-common.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-16.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdarg.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/stdio_lim.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/stdlib.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitflags.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitstatus.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/types.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/time.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/select.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/select.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/sigset.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/time.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/sysmacros.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/alloca.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/string.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/fcntl.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/fcntl.h \
+ ../lib/expat.h ../lib/expat_external.h ../lib/internal.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include-fixed/limits.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include-fixed/syslimits.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/limits.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix1_lim.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/local_lim.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/linux/limits.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_local_lim.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix2_lim.h \
+ ../lib/expat.h xmlfile.h xmltchar.h ../lib/expat_external.h filemap.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/unistd.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix_opt.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_posix_opt.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/environments.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/confname.h \
+ /home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/getopt.h
+
+../expat_config.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/stdio.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/features.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_config.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/cdefs.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stddef.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/types.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/wordsize.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/typesizes.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_stdio.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/wchar.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/wchar.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/pthreadtypes.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/endian.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/endian.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/byteswap.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-common.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/byteswap-16.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include/stdarg.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/stdio_lim.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/stdlib.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitflags.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/waitstatus.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/types.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/time.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/select.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/select.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/sigset.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/time.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/sys/sysmacros.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/alloca.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/string.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/fcntl.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/fcntl.h:
+
+../lib/expat.h:
+
+../lib/expat_external.h:
+
+../lib/internal.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include-fixed/limits.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/lib/gcc/arm-rockchip830-linux-uclibcgnueabihf/8.3.0/include-fixed/syslimits.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/limits.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix1_lim.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/local_lim.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/linux/limits.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_local_lim.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix2_lim.h:
+
+../lib/expat.h:
+
+xmlfile.h:
+
+xmltchar.h:
+
+../lib/expat_external.h:
+
+filemap.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/unistd.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/posix_opt.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/uClibc_posix_opt.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/environments.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/confname.h:
+
+/home/miku/ultimate-build-lf/luckfox_toolchain/sysdrv/source/buildroot/buildroot-2023.02.6/output/host/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include/bits/getopt.h:

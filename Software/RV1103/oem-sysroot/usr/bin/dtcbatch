@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# ============================================================
+# dtcbatch: Batch Device Tree Overlay (DTBO) Compiler
+# ============================================================
+
+# Display help message
+show_help() {
+    echo "Usage: dtcbatch -i <input_dir> -o <output_dir>"
+    echo ""
+    echo "Options:"
+    echo "  -i    Specify the input directory containing .dts files"
+    echo "  -o    Specify the output directory for compiled .dtbo files"
+    echo "  -h    Show this help message"
+    echo ""
+    echo "Example:"
+    echo "  dtcbatch -i ./my_dts_files -o /oem/dtbo/fbdev"
+}
+
+# Initialize variables
+IN_DIR=""
+OUT_DIR=""
+
+# Parse command line arguments
+while getopts "i:o:h" opt; do
+    case ${opt} in
+        i )
+            IN_DIR=$OPTARG
+            ;;
+        o )
+            OUT_DIR=$OPTARG
+            ;;
+        h )
+            show_help
+            exit 0
+            ;;
+        \? )
+            echo "Invalid option: -$OPTARG" >&2
+            show_help
+            exit 1
+            ;;
+        : )
+            echo "Option -$OPTARG requires an argument." >&2
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# Check if required arguments are provided
+if [ -z "$IN_DIR" ] || [ -z "$OUT_DIR" ]; then
+    echo "Error: Missing required input or output directory arguments."
+    show_help
+    exit 1
+fi
+
+# Check if input directory exists
+if [ ! -d "$IN_DIR" ]; then
+    echo "Error: Input directory '$IN_DIR' does not exist."
+    exit 1
+fi
+
+# Check and create output directory if it doesn't exist
+if [ ! -d "$OUT_DIR" ]; then
+    echo "Output directory '$OUT_DIR' does not exist. Creating..."
+    mkdir -p "$OUT_DIR" || { echo "Error: Failed to create output directory '$OUT_DIR'. Check permissions."; exit 1; }
+fi
+
+# Statistics variables
+total=0
+success=0
+fail=0
+
+echo "========================================"
+echo "Starting batch compilation of DTS files..."
+echo "Input directory:  $IN_DIR"
+echo "Output directory: $OUT_DIR"
+echo "========================================"
+
+# Loop through all .dts files in the input directory
+for dts_file in "$IN_DIR"/*.dts; do
+    # Check if there are actually any matching files
+    if [ ! -f "$dts_file" ]; then
+        echo "No .dts files found in '$IN_DIR'."
+        exit 0
+    fi
+
+    # Extract filename without path and extension
+    filename=$(basename "$dts_file" .dts)
+    dtbo_file="$OUT_DIR/${filename}.dtbo"
+    
+    total=$((total + 1))
+    
+    # Execute dtc command
+    # 2>/dev/null hides the typical dtc warnings to keep the output clean
+    dtc -@ -I dts -O dtb -o "$dtbo_file" "$dts_file" 2>/dev/null
+    
+    # Check if compilation was successful
+    if [ $? -eq 0 ] && [ -f "$dtbo_file" ]; then
+        echo "[SUCCESS] $filename.dts -> $filename.dtbo"
+        success=$((success + 1))
+    else
+        echo "[FAILED]  Error compiling $filename.dts! (Remove 2>/dev/null in the script for details)"
+        fail=$((fail + 1))
+    fi
+done
+
+echo "========================================"
+echo "Compilation complete! Total: $total | Success: $success | Failed: $fail"
+echo "========================================"

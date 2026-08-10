@@ -1,0 +1,180 @@
+#!/bin/sh
+
+# ============================================================
+# FB Devicetree Overlay Configuration Utility
+# ============================================================
+
+# Paths
+DTBO_DIR="/oem/dtbo/fbdev"
+# Changed: Config file is now located in /oem/usr/etc/ to keep /oem clean
+CONFIG_DIR="/oem/usr/etc"
+CONFIG_FILE="$CONFIG_DIR/fb_select.conf"
+CONFIGFS_DIR="/sys/kernel/config/device-tree/overlays/fb_overlay"
+
+# Ensure ConfigFS is mounted
+mount_configfs() {
+    if [ ! -d "/sys/kernel/config" ]; then
+        mount -t configfs none /sys/kernel/config
+    fi
+}
+
+# Unload the currently active overlay
+unload_overlay() {
+    if [ -d "$CONFIGFS_DIR" ]; then
+        echo "Unloading current overlay..."
+        rmdir "$CONFIGFS_DIR"
+    fi
+}
+
+# Load a specific overlay by filename
+load_overlay() {
+    local dtbo_name="$1"
+    local dtbo_path="$DTBO_DIR/$dtbo_name"
+
+    if [ ! -f "$dtbo_path" ]; then
+        echo "Error: DTBO file not found: $dtbo_path"
+        return 1
+    fi
+
+    # 1. Unload existing overlay to prevent conflicts
+    unload_overlay
+
+    # 2. Load the new overlay
+    echo "Loading $dtbo_name..."
+    mkdir -p "$CONFIGFS_DIR"
+    
+    # We use 'cat' to write the binary data to the configfs attribute
+    cat "$dtbo_path" > "$CONFIGFS_DIR/dtbo"
+    
+    # Enable the overlay
+    echo 1 > "$CONFIGFS_DIR/status"
+
+    if [ $? -eq 0 ]; then
+        echo "Success: Overlay $dtbo_name loaded active."
+        
+        # 3. Persist configuration
+        # Ensure the directory exists before writing
+        if [ ! -d "$CONFIG_DIR" ]; then
+            mkdir -p "$CONFIG_DIR"
+        fi
+        echo "$dtbo_name" > "$CONFIG_FILE"
+    else
+        echo "Failed to load overlay."
+        # Cleanup on failure
+        rmdir "$CONFIGFS_DIR"
+        return 1
+    fi
+}
+
+# Interactive Text User Interface (TUI)
+interactive_menu() {
+    while true; do
+        clear
+        echo "========================================"
+        echo "      Screen Configuration Utility      "
+        echo "========================================"
+        
+        # Show current configuration
+        if [ -f "$CONFIG_FILE" ]; then
+            current_conf=$(cat "$CONFIG_FILE")
+            echo "Current Screen: [ $current_conf ]"
+        else
+            echo "Current Screen: [ None (Default) ]"
+        fi
+        echo "----------------------------------------"
+        echo "Available Configurations:"
+
+        # List available .dtbo files
+        i=1
+        # Clear previous variables
+        unset file_list
+        
+        for file in "$DTBO_DIR"/*.dtbo; do
+            if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                echo "  $i) $filename"
+                # Store filename in a way compatible with sh/ash
+                eval "file_$i=$filename"
+                i=$((i+1))
+            fi
+        done
+        
+        # Check if files exist
+        total_files=$((i-1))
+        if [ $total_files -eq 0 ]; then
+            echo "  No .dtbo files found in $DTBO_DIR"
+            echo "----------------------------------------"
+            echo "q) Quit"
+            exit 1
+        fi
+
+        echo "----------------------------------------"
+        echo "q) Quit"
+        echo ""
+        printf "Select an option (1-$total_files): "
+        read choice
+
+        case "$choice" in
+            q|Q)
+                echo "Exiting."
+                exit 0
+                ;;
+            *)
+                # Check if choice is a valid number
+                if echo "$choice" | grep -qE '^[0-9]+$' && [ "$choice" -ge 1 ] && [ "$choice" -le "$total_files" ]; then
+                    eval selected_file=\$file_$choice
+                    echo ""
+                    load_overlay "$selected_file"
+                    echo ""
+                    echo "Press Enter to continue..."
+                    read dummy
+                else
+                    echo ""
+                    echo "Invalid selection. Press Enter to try again."
+                    read dummy
+                fi
+                ;;
+        esac
+    done
+}
+
+# --- Main Logic ---
+
+# Ensure basic requirements
+mount_configfs
+
+case "$1" in
+    --load)
+        # CLI Mode: Manually load a file
+        # Usage: fb_dtbo_config --load <filename.dtbo>
+        if [ -n "$2" ]; then
+            load_overlay "$2"
+        else
+            echo "Usage: $0 --load <filename.dtbo>"
+            exit 1
+        fi
+        ;;
+    --init)
+        # Boot Mode: Load saved config or default
+        if [ -f "$CONFIG_FILE" ]; then
+            target=$(cat "$CONFIG_FILE")
+            echo "Boot Init: Loading saved config [$target]..."
+            load_overlay "$target"
+        else
+            # Fallback: Load the first available DTBO if no config exists
+            # This ensures the screen works out-of-the-box on first boot
+            first_dtbo=$(ls "$DTBO_DIR"/*.dtbo 2>/dev/null | head -n 1 | xargs basename 2>/dev/null)
+            if [ -n "$first_dtbo" ]; then
+                echo "Boot Init: No config found, loading default [$first_dtbo]..."
+                load_overlay "$first_dtbo"
+            else
+                echo "Boot Init: No DTBO files found in $DTBO_DIR."
+            fi
+        fi
+        ;;
+    *)
+        # Default: Interactive Menu
+        interactive_menu
+        ;;
+esac
+

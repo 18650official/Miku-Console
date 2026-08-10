@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# Start/Stop virtual_keypad daemon
+#
+
+# 配置路径
+DAEMON_PATH="/oem/usr/bin/virtual_keypad"
+MODULE_PATH="/oem/usr/ko/uinput.ko"
+PID_FILE="/var/run/gpio_keypad.pid"
+
+start() {
+    printf "Starting virtual_keypad: "
+
+    # 1. 检测 uinput 驱动模块
+    # grep -q 用于静默搜索，如果找不到 uinput 模块则返回非0
+    if ! lsmod | grep -q "uinput"; then
+        if [ -f "$MODULE_PATH" ]; then
+            insmod "$MODULE_PATH"
+            if [ $? -eq 0 ]; then
+                printf "(uinput loaded) "
+                # 给一点时间让 /dev/uinput 节点生成
+                sleep 1 
+            else
+                echo "Failed to load uinput.ko!"
+                return 1
+            fi
+        else
+            echo "Error: uinput.ko not found at $MODULE_PATH"
+            return 1
+        fi
+    fi
+
+    # 2. 检测是否已经运行 (通过 PID 文件)
+    if [ -f "$PID_FILE" ]; then
+        echo "Already running (PID: $(cat $PID_FILE))"
+        return 1
+    fi
+
+    # Copy mapping-file
+    rm -rf /oem/usr/etc/virtual_keypad.conf
+    cp /oem/key_mappings/default.conf /oem/usr/etc/virtual_keypad.conf
+
+    # 3. 启动守护进程
+    # 注意：因为 C 程序内部已经写了 daemonize() (fork + setsid)，
+    # 所以这里不需要加 '&'，直接运行即可。
+    if [ -x "$DAEMON_PATH" ]; then
+        $DAEMON_PATH
+        if [ $? -eq 0 ]; then
+            echo "OK"
+        else
+            echo "Failed to start"
+            return 1
+        fi
+    else
+        echo "Error: Binary not found or not executable at $DAEMON_PATH"
+        return 1
+    fi
+}
+
+stop() {
+    printf "Stopping virtual_keypad: "
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat "$PID_FILE")
+        kill "$PID"
+        # C 程序捕获信号后会自己删除 PID 文件，但为了保险我们稍后检查
+        sleep 1
+        if [ -f "$PID_FILE" ]; then
+            rm "$PID_FILE"
+        fi
+        echo "OK"
+    else
+        # 备选方案：如果 PID 文件丢失，尝试用 killall
+        killall virtual_keypad 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo "OK (via killall)"
+        else
+            echo "Not running"
+        fi
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        stop
+        sleep 1
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
+

@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# ==========================================================
+# == Main Boot Tasks (Will only run on the 2nd execution)
+# ==========================================================
+# Close the GUI launcher (Executed in father script)
+# /etc/init.d/S99lvgl stop
+# /etc/init.d/S99fbterm start_with_input
+
+# Prepare to launch the game
+# echo "Starting Main Boot Tasks..."
+# sleep 0.3
+
+# # 1.Auto update (Legacy)
+
+# # 2. Start Color test
+# /usr/bin/color_test_c
+# # Show color test information
+# sleep 2
+clear
+
+# 3. Game
+# echo "Start game file..."
+
+# Stuck process, e.g. the main game file
+cd /oem/meow_rpg
+./meow_arm
+# evtest /dev/input/event1
+# stdio_test
+
+# Exit the son-script, and wait to restart the GUI
+echo "Game program exited..."
+sleep 0.5
+cd $HOME
+exit 0
+
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+# /usr/local/bin/get_otg_pin
+
+# 定义 I2C 总线和地址
+I2C_BUS=3
+I2C_ADDR="0x08"
+
+# 使用 i2ctransfer 读取 3 个字节 (格式如: 0x00 0x00 0x01)
+RAW_DATA=$(i2ctransfer -y $I2C_BUS r3@$I2C_ADDR 2>/dev/null)
+
+# 容错处理：如果读取失败（设备未连接或总线忙），默认返回 0（从机），确保安全
+if [ -z "$RAW_DATA" ]; then
+    echo 0
+    exit 0
+fi
+
+# 使用 awk 提取第 3 个字节（即状态字节）。如需提取第 1 个字节，改为 print $1
+STATUS_BYTE=$(echo "$RAW_DATA" | awk '{print $3}')
+
+# 判断状态并输出对应的 1 或 0
+if [ "$STATUS_BYTE" = "0x01" ]; then
+    echo 1
+else
+    echo 0
+fi
+

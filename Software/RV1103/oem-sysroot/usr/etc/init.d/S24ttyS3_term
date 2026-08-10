@@ -1,0 +1,116 @@
+#!/bin/sh
+
+# S24tty_term: Serial Terminal Service for /dev/ttyS3
+
+# ------------------------------------------------------------
+# Configuration
+# ------------------------------------------------------------
+SERIAL_PORT="/dev/ttyS3"
+BAUDRATE="38400"
+SHELL_EXEC="/bin/sh"
+PID_FILE="/var/run/ttyS3_term.pid"
+
+# ------------------------------------------------------------
+# Function Definitions
+# ------------------------------------------------------------
+
+start() {
+    echo "Starting serial terminal service on ${SERIAL_PORT}..."
+    # Boot-Beep
+    /oem/usr/bin/midi_player /oem/usr/share/audio/boot.txt &
+
+    # 1. Set the UART baud rate (Input and Output speed)
+    echo "  > Setting baud rate to ${BAUDRATE}."
+    /bin/stty -F "${SERIAL_PORT}" ispeed "${BAUDRATE}" ospeed "${BAUDRATE}"
+
+    # Check if the stty command succeeded
+    if [ $? -ne 0 ]; then
+        echo "  > ERROR: Failed to configure serial port ${SERIAL_PORT} using stty."
+        return 1
+    fi
+
+    # 2. Launch the Shell as a new session (setsid)
+    # The shell is started in the background (setsid ... &) and I/O is redirected.
+    echo "  > Launching interactive shell on ${SERIAL_PORT}..."
+#   setsid "${SHELL_EXEC}" < "${SERIAL_PORT}" > "${SERIAL_PORT}" 2>&1 &
+#   setsid /sbin/login -f root < "${SERIAL_PORT}" > "${SERIAL_PORT}" 2>&1 &
+    setsid /sbin/getty -L  ttyS3 0 vt100 < "${SERIAL_PORT}" > "${SERIAL_PORT}" 2>&1 &
+
+    # Save the PID of the background process (or the setsid wrapper if not a daemon)
+    # For simplicity in this init script style, we capture the PID of the shell 
+    # and save it for future 'stop' commands.
+    local SHELL_PID=$!
+    echo "${SHELL_PID}" > "${PID_FILE}"
+    echo "  > Shell process started with PID ${SHELL_PID}."
+    return 0
+}
+
+stop() {
+    echo "Stopping serial terminal service on ${SERIAL_PORT}..."
+
+    if [ -f "${PID_FILE}" ]; then
+        local SHELL_PID=$(cat "${PID_FILE}")
+        echo "  > Killing process with PID ${SHELL_PID}..."
+        kill "${SHELL_PID}"
+
+        # Check if kill command succeeded
+        if [ $? -eq 0 ]; then
+            rm -f "${PID_FILE}"
+            echo "  > Service stopped successfully."
+            return 0
+        else
+            echo "  > WARNING: Could not kill process ${SHELL_PID}. Check manually."
+            return 1
+        fi
+    else
+        echo "  > PID file ${PID_FILE} not found. Service may not be running."
+        return 1
+    fi
+}
+
+restart() {
+    stop
+    start
+}
+
+status() {
+    if [ -f "${PID_FILE}" ]; then
+        local SHELL_PID=$(cat "${PID_FILE}")
+        if ps -p "${SHELL_PID}" > /dev/null; then
+            echo "Serial terminal service on ${SERIAL_PORT} is running (PID: ${SHELL_PID})."
+            return 0
+        else
+            echo "Serial terminal service on ${SERIAL_PORT} is NOT running, but PID file exists."
+            return 1
+        fi
+    else
+        echo "Serial terminal service on ${SERIAL_PORT} is NOT running (No PID file)."
+        return 3
+    fi
+}
+
+# ------------------------------------------------------------
+# Main execution
+# ------------------------------------------------------------
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit $?
+

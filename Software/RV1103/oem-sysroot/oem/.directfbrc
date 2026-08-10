@@ -1,0 +1,12 @@
+system=fbdev
+fbdev=/dev/fb0
+mode=240x320
+depth=16
+pixelformat=RGB16
+no-hardware
+cursor=none
+no-cursor
+linux-input-devices=/dev/input/event0
+primary-layer=0
+# disable-module=linux_input
+force-windowed

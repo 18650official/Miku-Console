@@ -1,0 +1,142 @@
+#!/bin/sh
+
+# =========================================================
+# Configuration Area
+# =========================================================
+
+# Ensure core binaries can be found
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
+export LD_LIBRARY_PATH=/oem/usr/lib:$LD_LIBRARY_PATH
+
+GAME_BIN="$1"
+
+# Key mapping paths
+MAPPING_DIR="/oem/key_mappings"
+CONF_TARGET="/oem/usr/etc/virtual_keypad.conf"
+
+# --- Stella / DirectFB / SDL Specific Environments ---
+# layer-size & scaling=stretch: Forces video output to stretch across the 320x240 screen
+export DFBARGS="module-dir=/oem/usr/lib/directfb-1.7-7,system=fbdev,fbdev=/dev/fb0,mode=320x240,depth=16,pixelformat=RGB16,no-hardware,no-cursor,force-windowed,layer-size=320x240,scaling=stretch"
+export SDL_VIDEODRIVER=directfb
+export SDL_NOMOUSE=1
+
+# export SDL_AUDIODRIVER=dummy
+# --- Stella / DirectFB / SDL Specific Environments ---
+# layer-size & scaling=stretch: Forces video output to stretch across the 320x240 screen
+export DFBARGS="module-dir=/oem/usr/lib/directfb-1.7-7,system=fbdev,fbdev=/dev/fb0,mode=320x240,depth=16,pixelformat=RGB16,no-hardware,no-cursor,force-windowed,layer-size=320x240,scaling=stretch"
+export SDL_VIDEODRIVER=directfb
+export SDL_NOMOUSE=1
+
+# =========================================================
+# Dynamic Audio Device Routing (Card 1 Detection)
+# =========================================================
+if [ -d "/proc/asound/card1" ] || [ -c "/dev/snd/pcmC1D0p" ]; then
+    echo ">>> Headphone detected (Card 1). Enabling ALSA audio output..."
+    export SDL_AUDIODRIVER=alsa
+    # 使用 plughw:1,0 能让 alsa-lib 自动做采样率/格式转换，防止 Stella 报 Invalid Format 错误
+    export AUDIODEV="plughw:1,0"
+else
+    echo ">>> No headphone detected (Card 0 only). Using dummy audio driver..."
+    export SDL_AUDIODRIVER=dummy
+fi
+
+export XDG_CONFIG_HOME=/oem/.config
+export XDG_DATA_HOME=/oem/.local/share
+
+# Disable Core Dump to save storage during crashes
+echo "/dev/null" > /proc/sys/kernel/core_pattern 2>/dev/null || ulimit -c 0
+
+# Check parameters
+if [ -z "$GAME_BIN" ]; then
+    echo "Usage: $0 /path/to/game.bin"
+    exit 1
+fi
+
+# =========================================================
+# Hot-Swap Keymap Function
+# =========================================================
+load_keymap() {
+    MAP_NAME="$1"
+    SOURCE_FILE="$MAPPING_DIR/$MAP_NAME"
+
+    echo ">>> Loading keymap: $MAP_NAME ..."
+
+    if [ -f "$SOURCE_FILE" ]; then
+        # CRITICAL: Use 'cat' redirect instead of 'cp' or 'rm'
+        # This keeps the target file's inode unchanged, ensuring the C daemon's
+        # inotify watch (IN_CLOSE_WRITE) triggers successfully every time.
+        cat "$SOURCE_FILE" > "$CONF_TARGET"
+        sleep 0.1
+    else
+        echo "[ERROR] Keymap not found: $SOURCE_FILE"
+    fi
+}
+
+# =========================================================
+# Cleanup & Failsafe Exit
+# =========================================================
+cleanup() {
+    echo "\n>>> Signal received or process ended. Cleaning up..."
+
+    # 1. Safely terminate the emulator process
+    if [ -n "$EMU_PID" ]; then
+        kill -TERM $EMU_PID 2>/dev/null
+        
+        # Poll the process state for up to 1 second
+        TIMEOUT=10
+        while [ $TIMEOUT -gt 0 ]; do
+            if kill -0 $EMU_PID 2>/dev/null; then
+                sleep 0.1
+                TIMEOUT=$((TIMEOUT-1))
+            else
+                break # Process exited naturally
+            fi
+        done
+
+        # If it still exists (frozen), force kill it
+        if kill -0 $EMU_PID 2>/dev/null; then
+            echo ">>> Process hung. Sending SIGKILL (-9)..."
+            kill -9 $EMU_PID 2>/dev/null
+        fi
+    fi
+
+    # 2. Clean DirectFB locks (Prevents startup failure on next run)
+    rm -rf /tmp/dfb-* /tmp/lock/directfb 2>/dev/null
+
+    # 3. Restore default keypad layout for LVGL
+    load_keymap "default.conf"
+
+    # 4. Clear the Framebuffer to remove frozen game frames
+    echo ">>> Clearing framebuffer..."
+    dd if=/dev/zero of=/dev/fb0 count=320 bs=512 >/dev/null 2>&1
+
+    # 5. Restore Virtual Terminal (Prevents invisible cursor / broken console)
+    chvt 2
+    chvt 1
+    stty sane
+
+    echo ">>> Cleanup complete. Returning to UI."
+    exit 0
+}
+
+# Catch interrupt signals to guarantee cleanup is executed
+trap cleanup INT TERM HUP QUIT
+
+# =========================================================
+# Main Execution
+# =========================================================
+
+# Load Atari specific mapping
+load_keymap "atari.conf"
+
+echo ">>> Starting Stella Emulator..."
+/oem/usr/bin/.stella -video soft -tia.zoom 1 -fullscreen 1 -sound 1 "$GAME_BIN" &
+EMU_PID=$!
+
+# Wait for emulator to finish
+wait $EMU_PID
+
+# Clean exit after normal shutdown
+EMU_PID=""
+cleanup
+

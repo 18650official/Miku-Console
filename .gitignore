@@ -1,0 +1,18 @@
+# ==========================================
+# Miku-Console Root .gitignore
+# ==========================================
+
+# 忽略 RV1103 编译产物与庞大的工具链
+Software/RV1103/luckfox_toolchain/
+Software/RV1103/dist/
+Software/RV1103/staging/
+Software/RV1103/toolchain.cmake
+
+# 忽略可能产生的中间编译文件
+*.o
+*.so
+*.a
+*.log
+
+# 忽略系统自动生成的文件
+.DS_Store
